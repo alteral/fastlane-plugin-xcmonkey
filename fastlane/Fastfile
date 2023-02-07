@@ -1,0 +1,32 @@
+skip_docs
+
+lane :release do
+  code_review
+  sh('bundle exec rake build')
+  gem_path = "pkg/fastlane-plugin-xcmonkey-#{version}.gem"
+  sh("gem push ../#{gem_path}")
+  set_github_release(
+    repository_name: 'alteral/fastlane-plugin-xcmonkey',
+    api_token: ENV.fetch("GITHUB_TOKEN", nil),
+    name: version,
+    tag_name: version,
+    description: "v#{version}",
+    commitish: git_branch,
+    upload_assets: [gem_path]
+  )
+end
+
+lane :code_review do
+  sh('bundle exec rake')
+  test
+end
+
+lane :test do
+  udid = `xcrun simctl list | grep " iPhone 14 Pro Max"`.split("\n")[0].split('(')[1].split(')')[0]
+  xcmonkey(bundle_id: 'com.apple.Maps', udid: udid, event_count: 10)
+end
+
+def version
+  version_path = '../lib/fastlane/plugin/xcmonkey/version.rb'
+  File.read(version_path).scan(/\d+/).join('.')
+end
