@@ -22,8 +22,8 @@ lane :code_review do
 end
 
 lane :test do
-  udid = `xcrun simctl list | grep " iPhone 14 Pro Max"`.split("\n")[0].split('(')[1].split(')')[0]
-  xcmonkey(bundle_id: 'com.apple.Maps', udid: udid, event_count: 10)
+  sim = FastlaneCore::Simulator.all.detect { |d| d.name == 'iPhone 14' }
+  xcmonkey(bundle_id: 'com.apple.Maps', udid: sim.udid, event_count: 10)
 end
 
 def version
