@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.4'
 
-  spec.add_dependency('xcmonkey', '1.3.0')
+  spec.add_dependency('xcmonkey', '1.3.1')
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
