@@ -45,9 +45,12 @@ fastlane add_plugin xcmonkey
 ## Usage
 
 ```ruby
-bundle_id = 'com.apple.Maps'
-device = 'iPhone 14 (16.2)'
-sim = FastlaneCore::Simulator.all.detect { |d| device == "#{d.name} (#{d.os_version})") }
+lane :test do
+  bundle_id = 'com.apple.Maps'
+  device = 'iPhone 14'
+  sim = FastlaneCore::Simulator.all.filter { |d| d.name == device }.max_by(&:os_version)
+  udid = sim.udid
 
-xcmonkey(udid: sim.udid, bundle_id: bundle_id)
+  xcmonkey(udid: udid, bundle_id: bundle_id)
+end
 ```
